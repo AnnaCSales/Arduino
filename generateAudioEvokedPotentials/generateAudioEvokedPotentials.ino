@@ -1,6 +1,8 @@
 
 // Anna Sales 21/04/2016
-// Control script for tone generation, TTL generation and laser pulses (hard-coded at 10hz, 50ms pulses for 400 ms)
+// Control script for tone generation using an Arduino Due, TTL generation and laser pulses (hard-coded at 10hz, 50ms pulses for 400 ms).
+// Used in the audio oddball experiment in conjunction with LC laser stimulation
+// The Due is needed as it has a DAC, which is used to generate high frequency tones.
 // DDS tone generation is based on a work at rcarduino.blogspot.com.
 
 // These are the clock frequencies available to the Arduino Due timers /2,/8,/32,/128

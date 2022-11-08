@@ -1,6 +1,7 @@
 #include <stdio.h>
 //This script just flashes a light at random intervals + generates a TTL at the
-//same time. This is useful for synchronising video and Ephys recording. 
+//same time. This is useful for synchronising video and Ephys recording. Simply make
+//sure that an LED is attached to 'ledPin'.
 
 const int ledPin=5;  //pin for the led
 const int debugPin=13;  

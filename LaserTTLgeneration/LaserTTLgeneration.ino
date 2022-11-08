@@ -1,12 +1,13 @@
 #include <stdio.h>
 
-//This script generates TTLs to activate the laser according to parameters set by the user.
+//This script generates TTLs to activate the laser according to parameters set by the user. Upload code and open the Serial monitor.
 
-const int laserPin=3;  //pin for the laser
-const int ledPin=31;   //as a check on the laser, this will light up when the laser does.
-//const int debugPin=13; //can connect an LED for debugging purposes.
+const int laserPin=3;  //pin for controlling the laser
+const int ledPin=31;   //as a check on the laser, this pin will go high when the laser does. 
+                       //Useful for debugging when the laser is not attached (connect to an LED or use the Arduino's built in LED)
 
 
+// declare variables:
 int cycletype;
 char bufferClear[4];
 char incomingData[2];
@@ -39,19 +40,19 @@ float oldNT;
 float numTr;
 int ok_go=1;
 
-void setup() {
+void setup() {             //setup variables, begin with everything switched off.
   Serial.begin(9600);
   pinMode(laserPin, OUTPUT);
   pinMode(ledPin, OUTPUT);
-  digitalWrite(ledPin, LOW);  //don't need sep. pin as will TTL from laser trigger
+  digitalWrite(ledPin, LOW);  
   digitalWrite(laserPin, LOW);
-  message==0;
+  message==1;
 }
 
 void loop() {
 
 if (message){
-  Serial.println(whatStim); 
+  Serial.println(whatStim);   //ask user for parameters
   message=0; 
 }
 
@@ -60,10 +61,8 @@ if (Serial.available() && readStage==1) {
   
     digitalWrite(ledPin, LOW); //start low
     digitalWrite(laserPin, LOW);
-
    
-    
-    input  = Serial.readStringUntil(10); //stop reading when it sees newline.  
+    input  = Serial.readStringUntil(10); //get input from user, stop reading when newline is entered.  
 
     //now take apart the string to pull out individual parameters.
     int commaInda = input.indexOf(',');   //find the first comma separator  
@@ -71,9 +70,10 @@ if (Serial.available() && readStage==1) {
     
     freqs = input.substring(0, commaInda);  //freq in Hz
     pulseONs=input.substring(commaInda+1, commaIndb); //length of time each pulse is on
-    numTrain=input.substring(commaIndb+1);  //how many times to do this, i.e. keep going until 10 pulses have occured. If set to 0, this will run indefinitely until stopped by user input. 
+    numTrain=input.substring(commaIndb+1);  //how many times to do this, i.e. keep going until 10 pulses have occured. 
+                                            //If set to 0, this will run indefinitely until stopped by user input. 
 
-       numTr=numTrain.toFloat();
+    numTr=numTrain.toFloat();
     freq=freqs.toFloat();   
 
     if (numTr==1){
@@ -88,7 +88,8 @@ if (Serial.available() && readStage==1) {
     
     pulseON=pulseONs.toFloat(); 
     numTr=numTrain.toFloat();
-   
+    
+    // Confirm to user what has been selected:
     Serial.println("Freq (hz), pulse length (ms), number of pulses are as follow");
     Serial.println(freq);
     Serial.println(pulseON);
@@ -99,8 +100,8 @@ if (Serial.available() && readStage==1) {
      Serial.println(numTr); 
     }   
 
-      vals=1;  //ready to go, part one
-      readStage++;
+    vals=1;  //we are now ready to go
+    readStage++;  //increment readstage to move on to the next step
    
    if (numTr==0 && ok_go){
       cycletype=2;    //if pulseON / freq is set to zero assume constant stimulation is required.
@@ -133,7 +134,7 @@ if (Serial.available() && readStage==1) {
  }
  
 
- if (vals && go) {   
+ if (vals && go) {     //this generates the TTLs as requested
    
    if (cycletype==1 && pulseCount < numTr) {  
     digitalWrite(laserPin, HIGH);
@@ -159,7 +160,7 @@ if (Serial.available() && readStage==1) {
       eat  = Serial.readStringUntil(10); //clear out the buffer
    }
    
-   else if (cycletype==2)  //keep going indefinitely
+   else if (cycletype==2)  //keep going indefinitely if continuous TTLs are required
    { 
     digitalWrite(laserPin, HIGH);
     digitalWrite(ledPin, HIGH);

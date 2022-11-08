@@ -1,13 +1,9 @@
 #include <stdio.h>
-//this script controls the arduino response to commands from MATLAB.
-//This will involve commands to set the laser parameters, activate the laser according to
-//information provided, and create TTLS. 
-//Overall start and stop for each laser train will come from MATLAB.
+//Script to generate a train of 50ms TTLs according to user input - user can set frequency and number of pulses
+//Open the Serial monitor to set the parameters, start and stop the TTLs
 
 const int laserPin=8;  //pin for the laser
 const int ledPin=13;   //as a check on the laser, this will light up when the laser does.
-//const int debugPin=13; //can connect an LED for debugging purposes.
-
 
 int cycletype;
 char bufferClear[4];
@@ -120,7 +116,6 @@ if (Serial.available() && readStage==1) {
  
  }
  
-
  if (vals && go) {   
    
    if (cycletype==1 && pulseCount < numTr) {  
